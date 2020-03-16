@@ -1,0 +1,10 @@
+#!/bin/bash
+
+docker run \
+  --rm \
+  -v /data/RMN:/data/RMN \
+  --user "$(id -u $USER):$(id -g $USER)" \
+  -v $(pwd):/app \
+  -w /app \
+  mrigroupopbg/mri-python3 python3 $@
+

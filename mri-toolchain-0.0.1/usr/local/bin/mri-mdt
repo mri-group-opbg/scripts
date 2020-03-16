@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/usr/local/bin/x11docker --desktop --user=$(id -u):$(id -g) mrigroupopbg/mri-mdt $@ 
+
