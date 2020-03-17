@@ -1,8 +1,38 @@
 #!/bin/bash
 
+# Reset in case getopts has been used previously in the shell.
+OPTIND=1
+
+# Initialize our own variables:
+volumes=""
+vollist=""
+port=8888
+
+while getopts "h?s:p:" opt; do
+    case "$opt" in
+    h|\?)
+        show_help
+        exit 0
+        ;;
+    s)  volumes="$volumes -v $OPTARG:$OPTARG"
+        vollist="$vollist\n- $OPTARG"
+        ;;
+    p)  port=$OPTARG
+        ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[ "${1:-}" = "--" ] && shift
+
+echo "I'm using shared volumes: $vollist"
+echo 
+echo "Running: $@"
+
 docker run \
   --rm \
-  -v /data/RMN:/data/RMN \
+  $volumes \
   --user "$(id -u $USER):$(id -g $USER)" \
   -v $(pwd):/app \
   -w /app \

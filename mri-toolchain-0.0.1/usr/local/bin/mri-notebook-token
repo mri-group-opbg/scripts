@@ -1,0 +1,7 @@
+#!/bin/bash
+
+port=$(docker inspect rmi-notebook | grep HostPort | head -n 1 | awk '{print $2}')
+host=$(docker logs rmi-notebook 2>&1 | grep "127.0.0.1:8888/" | grep token | head -n 1 | awk '{print $5}')
+port=$(echo $port | sed 's/.\(.*\)/\1/' | sed 's/\(.*\)./\1/')
+url=$(echo $host | sed "s/8888/$port/g")
+echo $url
