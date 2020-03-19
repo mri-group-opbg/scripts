@@ -31,7 +31,7 @@ echo
 echo "Running: $@"
 
 docker run -d \
-	--name rmi-notebook \
+	--name "rmi-notebook-$USER" \
 	--rm \
 	--user "$(id -u $USER):$(id -g $USER)" \
     $volumes \
