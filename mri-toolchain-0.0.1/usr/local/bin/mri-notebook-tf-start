@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# Reset in case getopts has been used previously in the shell.
+OPTIND=1
+
+# Initialize our own variables:
+volumes=""
+vollist=""
+port=8888
+
+usage="$(basename "$0") [-h] [-s p] -- Run a docker container with a Notebook
+
+where:
+    -h  show this help text
+    -p  set the port where the notebook will run
+    -s  share a local directory with the notebook"
+
+while getopts "h?s:p:" opt; do
+    case "$opt" in
+    h|\?)
+        echo "$usage"
+        exit 0
+        ;;
+    s)  volumes="$volumes -v $OPTARG:$OPTARG"
+        vollist="$vollist\n- $OPTARG"
+        ;;
+    p)  port=$OPTARG
+        ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[ "${1:-}" = "--" ] && shift
+
+echo "I'm using shared volumes: $vollist"
+echo 
+echo "Running: $@"
+
+docker run -d \
+	--name "mri-notebook-$USER" \
+	--rm \
+	--user "$(id -u $USER):$(id -g $USER)" \
+    --gpus all \
+    -v $(pwd):/tf/local \
+    $volumes \
+	-p "$port":8888 \
+	tensorflow/tensorflow:1.15.2-py3-jupyter
+
+echo "The notebook is started!!!"
+echo "Please run: 'mri-notebook-token' to get notebook URL"
