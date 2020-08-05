@@ -1,6 +1,0 @@
-Package: mri-toolchain
-Version: 0.0.1
-Architecture: all
-Maintainer:  Michele Mastrogiovanni <michele.mastrogiovanni@gmail.com>
-Description: Common tools for MRI Group @ OPBG
-
